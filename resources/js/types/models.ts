@@ -38,5 +38,5 @@ export interface PageProps {
     [key: string]: unknown;
     brand: import('./brand').Brand;
     auth: { user?: { id: string; name: string; email: string } };
-    flash: { success?: string; error?: string };
+    flash?: { success?: string; error?: string };
 }
