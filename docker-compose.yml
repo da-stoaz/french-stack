@@ -2,7 +2,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    ports: ["5432:5432"]
+    ports: ["5551:5432"]
     environment:
       POSTGRES_DB: physio
       POSTGRES_USER: physio

@@ -1,3 +1,4 @@
+import React from 'react';
 import type { PageProps } from '@/types/models';
 import { Link, usePage } from '@inertiajs/react';
 
