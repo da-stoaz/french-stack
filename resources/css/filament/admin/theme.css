@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.fi-sidebar {
+    @apply border-r border-slate-200/70 dark:border-slate-800;
+}
+
+.fi-topbar {
+    @apply backdrop-blur supports-[backdrop-filter]:bg-white/70 supports-[backdrop-filter]:dark:bg-slate-950/70;
+}

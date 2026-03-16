@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Mail;
+
+use App\Models\Booking;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class BookingNotification extends Mailable implements ShouldQueue
+{
+    use Queueable, SerializesModels;
+
+    public function __construct(public Booking $booking)
+    {
+        $this->booking->loadMissing(['service', 'timeSlot']);
+    }
+
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'New booking received - '.$this->booking->patient_name,
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            view: 'emails.booking-notification',
+            with: [
+                'booking' => $this->booking,
+                'brand' => config('brand'),
+            ],
+        );
+    }
+}

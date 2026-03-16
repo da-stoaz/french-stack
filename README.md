@@ -1,59 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Physiotherapy Clinic Booking Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Production-ready physiotherapy clinic website built with Laravel 12, PostgreSQL, Inertia.js + React + TypeScript, Inertia SSR, Filament 3, Sanctum, queued mailables, and Cloudflare R2 storage configuration.
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Backend: Laravel 12
+- Database: PostgreSQL
+- Frontend: Inertia.js + React + TypeScript
+- SSR: Inertia SSR (`resources/js/ssr.tsx`)
+- Admin/CMS: Filament 3 (`/admin`)
+- Auth: Laravel Sanctum + web sessions
+- Email: Queued mailables (`BookingConfirmation`, `BookingNotification`)
+- Storage: Cloudflare R2 via Laravel filesystem disk `r2`
+- Deployment target: Laravel Cloud + Cloudflare
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Rebranding
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+All brand content is centralized in:
 
-## Learning Laravel
+- `config/brand.php`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Update that file to change:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- name/tagline/description
+- contact details/social links
+- brand colors
+- fonts
+- logo path
 
-## Laravel Sponsors
+Brand config is shared via Inertia middleware and injected as CSS custom properties in `resources/views/app.blade.php`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Local Setup
 
-### Premium Partners
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
+php artisan inertia:start-ssr   # SSR node process
+php artisan queue:work          # Queue worker
+npm run dev                     # Vite dev server
+php artisan serve               # Laravel dev server
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Default Seed Data
 
-## Contributing
+- 5 physiotherapy services
+- 30 days of weekday slots at 09:00, 10:00, 11:00, 14:00, 15:00, 16:00
+- 6 testimonials
+- 1 admin user:
+  - email: `admin@<brand-email-domain>` (derived from `config('brand.email')`)
+  - password: `password`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Key Routes
 
-## Code of Conduct
+- `/` home
+- `/services` full service list
+- `/book` booking form
+- `/booking/confirmed` post-booking confirmation
+- `/login` admin login
+- `/admin` Filament admin panel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Queue + Email
 
-## Security Vulnerabilities
+- Queue driver: `database`
+- Jobs table migration included
+- Both booking mailables implement `ShouldQueue`
+- For local preview, use Mailpit or another SMTP sink by setting `.env` mail variables
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Cloudflare R2 + Laravel Cloud
 
-## License
+- Filesystem disk `r2` is configured in `config/filesystems.php`
+- Placeholder env keys are present in `.env.example`:
+  - `R2_ACCESS_KEY_ID`
+  - `R2_SECRET_ACCESS_KEY`
+  - `R2_BUCKET`
+  - `R2_REGION`
+  - `R2_ENDPOINT`
+  - `R2_URL`
+- `FILESYSTEM_CLOUD=r2` is preconfigured for production intent
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+For Laravel Cloud deployment, connect the repository, set environment variables, and run queue/SSR workers as managed processes.
