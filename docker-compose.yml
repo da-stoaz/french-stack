@@ -1,0 +1,17 @@
+# Stripped down docker-compose just for services
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_DB: physio
+      POSTGRES_USER: physio
+      POSTGRES_PASSWORD: secret
+
+  redis:
+    image: redis:alpine
+    ports: ["6379:6379"]
+
+  mailpit:
+    image: axllent/mailpit
+    ports: ["8025:8025", "1025:1025"]
