@@ -41,7 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex($brand['colors']['primary']),
             ])
-            // ->viteTheme('resources/css/filament/admin/theme.css')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->resources([
                 BookingResource::class,
                 ServiceResource::class,
