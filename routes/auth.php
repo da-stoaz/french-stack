@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['web', 'guest'])->group(function () {
     Route::get('/login', function (): Response {
         return Inertia::render('Auth/Login');
     })->name('login');
@@ -30,10 +30,12 @@ Route::middleware('guest')->group(function () {
     })->name('login.store');
 });
 
-Route::post('/logout', function (Request $request): RedirectResponse {
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::post('/logout', function (Request $request): RedirectResponse {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-    return to_route('home');
-})->middleware('auth')->name('logout');
+        return to_route('home');
+    })->name('logout');
+});
