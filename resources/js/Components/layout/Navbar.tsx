@@ -16,7 +16,7 @@ export default function Navbar() {
                     <Link href="/">Home</Link>
                     <Link href="/services">Services</Link>
                     <Link href="/book">Book</Link>
-                    {auth.user ? <Link href="/admin">Dashboard</Link> : <Link href="/login">Login</Link>}
+                    {auth?.user ? <a href="/admin">Dashboard</a> : <Link href="/login">Login</Link>}
                 </nav>
                 <div className="flex items-center gap-2">
                     <ThemeToggle />
