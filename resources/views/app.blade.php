@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
         @php
+            $brand = config('brand');
             $headingFont = config('brand.fonts.heading');
             $bodyFont = config('brand.fonts.body');
             $googleFonts = collect([$headingFont, $bodyFont])
@@ -22,11 +23,11 @@
 
         <style>
             :root {
-                --color-primary: {{ config('brand.colors.primary') }};
-                --color-secondary: {{ config('brand.colors.secondary') }};
-                --color-accent: {{ config('brand.colors.accent') }};
-                --font-heading: '{{ config('brand.fonts.heading') }}', serif;
-                --font-body: '{{ config('brand.fonts.body') }}', sans-serif;
+                --color-primary: {{ $brand['colors']['primary'] }};
+                --color-secondary: {{ $brand['colors']['secondary'] }};
+                --color-accent: {{ $brand['colors']['accent'] }};
+                --font-heading: '{{ $brand['fonts']['heading'] }}', serif;
+                --font-body: '{{ $brand['fonts']['body'] }}', sans-serif;
             }
         </style>
 
